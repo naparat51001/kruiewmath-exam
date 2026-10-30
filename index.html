@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>สถาบันคณิตศาสตร์บ้านครูอิ๋ว | Online Exam</title>
+<style>
+:root{--ink:#24334b;--pink:#f8dfe7;--blue:#dceefa;--cream:#fffaf1;--green:#23845c}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#fdf0f4,#edf7ff);font-family:system-ui,"Noto Sans Thai",sans-serif;color:var(--ink)}
+main{max-width:850px;margin:auto;padding:18px}.hero{background:linear-gradient(135deg,#fff,#f5e8f0);border:1px solid #eadce6;border-radius:26px;padding:28px 20px;text-align:center;box-shadow:0 8px 30px #33415512}
+.logo{font-size:46px}.hero h1{margin:8px 0;font-size:clamp(24px,5vw,38px)}.hero p{margin:6px 0;color:#64748b}
+.pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:16px 0}.pill{background:#fff;border-radius:99px;padding:7px 12px;font-size:13px}
+button{border:0;border-radius:14px;padding:13px 18px;font-size:16px;font-weight:700;cursor:pointer;background:#355d88;color:white}
+button:disabled{opacity:.45;cursor:not-allowed}.primary{background:#df8aa5;color:#fff}.question{background:#fff;border:1px solid #e5eaf0;border-radius:18px;padding:18px;margin:14px 0}
+.question h3{font-size:17px;margin:0 0 14px;line-height:1.6}.option{display:flex;gap:10px;align-items:flex-start;padding:11px;border:1px solid #e5e7eb;border-radius:12px;margin:8px 0;cursor:pointer}.option:has(input:checked){background:#f2f7fc;border-color:#7da6cc}.option input{margin-top:5px;accent-color:#355d88}
+.bar{height:9px;background:#e8edf2;border-radius:9px;overflow:hidden;margin:12px 0}.bar span{display:block;height:100%;background:#67a98a;width:0}
+.hidden{display:none}.result{background:#fff;border-radius:18px;padding:22px;text-align:center;margin:18px 0}.score{font-size:42px;font-weight:800;color:var(--green)}
+small{color:#64748b}.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:18px 0}
+@media(max-width:520px){main{padding:10px}.hero{padding:22px 14px}.question{padding:14px}}
+</style></head><body><main>
+<section class="hero" id="cover">
+<div class="logo">📚✏️➗</div>
+<h1>สถาบันคณิตศาสตร์บ้านครูอิ๋ว</h1>
+<h2>สนามฝึกสอบครูผู้ช่วยออนไลน์</h2>
+<p>Kru Iew Math – Online Exam</p>
+<div class="pills"><span class="pill">ภาค ก · คิดวิเคราะห์</span><span class="pill">20 ข้อ</span><span class="pill">20 คะแนน</span><span class="pill">ตรวจคะแนนทันที</span></div>
+<p>ฝึกทำได้ฟรี ไม่ต้องสมัครสมาชิก</p>
+<button class="primary" onclick="startQuiz()">เริ่มทำแบบทดสอบ</button>
+</section>
+<section id="quiz" class="hidden">
+<h2>ภาค ก : ความสามารถในการคิดวิเคราะห์</h2>
+<div><b id="progressText">ตอบแล้ว 0/20 ข้อ</b><div class="bar"><span id="progress"></span></div></div>
+<div id="questions"></div>
+<div class="actions"><button id="submit" class="primary" onclick="submitQuiz()" disabled>ส่งคำตอบและตรวจคะแนน</button></div>
+</section>
+<section id="result" class="result hidden"></section>
+<footer style="text-align:center;padding:20px"><small>สื่อฝึกทำข้อสอบจัดทำโดยสถาบันคณิตศาสตร์บ้านครูอิ๋ว · เป็นข้อสอบฝึกที่สร้างขึ้นใหม่ ไม่ใช่ข้อสอบจริงของหน่วยงานราชการ</small></footer>
+</main>
+<script>
+const data=[
+["จงหาค่าของ 245 + 378 + 125",["738","748","758","768"],1,"245 + 378 = 623 และ 623 + 125 = 748"],
+["15% ของ 600 มีค่าเท่าใด",["60","75","90","100"],2,"600 × 0.15 = 90"],
+["ลำดับ 2, 6, 12, 20, 30, ... จำนวนถัดไปคือข้อใด",["36","40","42","44"],2,"ผลต่างคือ 4, 6, 8, 10 และถัดไป 12 จึงได้ 42"],
+["ค่าเฉลี่ยของ 12, 15, 18, 25 และ 30 เท่ากับเท่าใด",["18","20","22","24"],1,"ผลรวม 100 หารด้วย 5 ได้ 20"],
+["สินค้าราคา 800 บาท ลดราคา 20% ต้องจ่ายเงินเท่าใด",["600 บาท","620 บาท","640 บาท","660 บาท"],2,"ส่วนลด 160 บาท จึงจ่าย 800 − 160 = 640 บาท"],
+["อัตราส่วน 2 : 3 เขียนเป็นอัตราส่วนที่เท่ากันได้ตามข้อใด",["4 : 5","6 : 9","8 : 10","10 : 12"],1,"คูณทั้งสองจำนวนด้วย 3 ได้ 6 : 9"],
+["รถยนต์เดินทาง 180 กิโลเมตร ใช้เวลา 3 ชั่วโมง มีอัตราเร็วเฉลี่ยเท่าใด",["50 กม./ชม.","55 กม./ชม.","60 กม./ชม.","65 กม./ชม."],2,"180 ÷ 3 = 60 กม./ชม."],
+["ถ้า A = 5 และ B = 3 แล้ว 2A + 4B มีค่าเท่าใด",["20","22","24","26"],1,"2(5) + 4(3) = 10 + 12 = 22"],
+["จำนวนใดเป็นจำนวนเฉพาะ",["21","27","29","33"],2,"29 มีตัวหารบวกเพียง 1 และ 29"],
+["24 × 15 มีค่าเท่าใด",["340","350","360","370"],2,"24 × (10 + 5) = 240 + 120 = 360"],
+["ลำดับ 100, 90, 81, 73, 66, ... จำนวนถัดไปคือข้อใด",["58","59","60","61"],2,"ผลต่าง −10, −9, −8, −7 และ −6 จึงได้ 60"],
+["วันนี้เป็นวันพุธ อีก 10 วันจะตรงกับวันใด",["วันศุกร์","วันเสาร์","วันอาทิตย์","วันจันทร์"],1,"10 วันคือ 7 วันกับอีก 3 วัน วันพุธบวก 3 วันคือวันเสาร์"],
+["ห้องเรียนมีนักเรียน 40 คน เป็นนักเรียนหญิง 22 คน มีนักเรียนชายกี่คน",["16 คน","18 คน","20 คน","22 คน"],1,"40 − 22 = 18 คน"],
+["แบ่งเงิน 2,400 บาท ตามอัตราส่วน 2 : 3 : 5 ผู้ที่ได้รับส่วนแบ่งมากที่สุดจะได้เงินเท่าใด",["800 บาท","1,000 บาท","1,200 บาท","1,400 บาท"],2,"รวม 10 ส่วน หนึ่งส่วน 240 บาท ดังนั้น 5 ส่วน = 1,200 บาท"],
+["คะแนนสอบ 4 วิชา คือ 70, 75, 80 และ 95 คะแนน ค่าเฉลี่ยเท่ากับเท่าใด",["75","80","85","90"],1,"(70 + 75 + 80 + 95) ÷ 4 = 80"],
+["ถ้าฝนตกแล้วถนนเปียก วันนี้ถนนไม่เปียก ข้อสรุปใดสมเหตุสมผลตามเงื่อนไขนี้",["วันนี้ฝนตก","วันนี้ฝนไม่ตก","วันนี้อากาศร้อน","วันนี้มีลมแรง"],1,"ตามเงื่อนไข หากฝนตกถนนต้องเปียก เมื่อถนนไม่เปียกจึงสรุปว่าฝนไม่ตก"],
+["ลำดับ 3, 6, 11, 18, 27, ... จำนวนถัดไปคือข้อใด",["36","38","40","42"],1,"ผลต่าง 3, 5, 7, 9 และ 11 จึงได้ 38"],
+["หนังสือ 5 เล่มเรียงเป็นแถว โดยมีหนังสือเล่มหนึ่งอยู่ตรงกลาง จะมีหนังสืออยู่ทางซ้ายและขวารวมกันกี่เล่ม",["2 เล่ม","3 เล่ม","4 เล่ม","5 เล่ม"],2,"เมื่อแยกเล่มกลางออก เหลือ 5 − 1 = 4 เล่ม"],
+["เวลา 09:35 น. ผ่านไป 2 ชั่วโมง 45 นาที จะเป็นเวลาใด",["12:10 น.","12:20 น.","12:30 น.","12:40 น."],1,"09:35 + 2 ชั่วโมง = 11:35 และเพิ่ม 45 นาทีเป็น 12:20"],
+["เครื่องจักร 4 เครื่องผลิตสินค้าได้ 400 ชิ้นใน 5 ชั่วโมง หากใช้เครื่องจักร 2 เครื่องในอัตราเดิม จะผลิตสินค้า 200 ชิ้นได้ในกี่ชั่วโมง",["2.5 ชั่วโมง","4 ชั่วโมง","5 ชั่วโมง","10 ชั่วโมง"],2,"เครื่องหนึ่งผลิต 20 ชิ้นต่อชั่วโมง สองเครื่องผลิต 40 ชิ้นต่อชั่วโมง ดังนั้น 200 ÷ 40 = 5 ชั่วโมง"]
+];
+let answers={};
+function startQuiz(){document.getElementById('cover').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');render()}
+function render(){document.getElementById('questions').innerHTML=data.map((q,i)=>`<article class="question"><h3>${i+1}. ${q[0]}</h3>${q[1].map((o,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}" onchange="choose(${i},${j})"><span>${"ABCD"[j]}. ${o}</span></label>`).join('')}</article>`).join('')}
+function choose(i,j){answers[i]=j;let n=Object.keys(answers).length;document.getElementById('progressText').textContent=`ตอบแล้ว ${n}/20 ข้อ`;document.getElementById('progress').style.width=(n/20*100)+'%';document.getElementById('submit').disabled=n!==20}
+function submitQuiz(){let score=data.reduce((s,q,i)=>s+(answers[i]===q[2]?1:0),0);document.getElementById('quiz').classList.add('hidden');let r=document.getElementById('result');r.classList.remove('hidden');r.innerHTML=`<h2>ผลการทำแบบทดสอบ</h2><div class="score">${score}/20</div><p>${score>=16?'ยอดเยี่ยมมาก!':score>=12?'ทำได้ดี ลองทบทวนอีกนิดนะคะ':'ฝึกฝนเพิ่มเติม แล้วลองใหม่อีกครั้งค่ะ'}</p><h3 style="text-align:left">เฉลยและคำอธิบาย</h3>`+data.map((q,i)=>`<div style="text-align:left;border-top:1px solid #e5e7eb;padding:12px 0"><b>${i+1}. ${q[0]}</b><p style="margin:6px 0;color:${answers[i]===q[2]?'#23845c':'#b45353'}">${answers[i]===q[2]?'ตอบถูก':'คำตอบที่ถูก: '+ "ABCD"[q[2]]+'. '+q[1][q[2]]}</p><small>${q[3]}</small></div>`).join('')+`<div class="actions"><button onclick="location.reload()">ทำข้อสอบอีกครั้ง</button></div>`;window.scrollTo(0,0)}
+</script></body></html>
